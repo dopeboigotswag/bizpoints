@@ -1,0 +1,106 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #74ebd5, #acb6e5);
+}
+
+/* Container that holds the entire login form */
+.login-container {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 320px;
+}
+
+/* Title styling */
+.login-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: #333333;
+}
+
+/* Common input styling */
+.login-container input[type="text"],
+.login-container input[type="password"] {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  color: #333333;
+}
+
+/* The “Remember Me” checkbox + “Forgot Password?” link */
+.login-container .options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.login-container .options label {
+  font-size: 0.95rem;
+  color: #333333;
+}
+
+.login-container .options a {
+  font-size: 0.95rem;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.login-container .options a:hover {
+  text-decoration: underline;
+}
+
+/* Login button */
+.login-container button {
+  width: 100%;
+  padding: 0.75rem 0;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.login-container button:hover {
+  background-color: #0056b3;
+}
+
+/* “Don’t have an account? Register here” */
+.login-container .register {
+  margin-top: 1.25rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #333333;
+}
+
+.login-container .register a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.login-container .register a:hover {
+  text-decoration: underline;
+}
+
+.login-container .options label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
