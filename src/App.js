@@ -6,7 +6,7 @@ import TermsPage from './TermsPage';
 
 function App() {
     return (
-        <Router>
+        <Router basename="/bizpoints">  {/* ← Add this line with your repo name */}
             <div className="App">
                 <Routes>
                     <Route path="/login" element={<LoginPage />} />

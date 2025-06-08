@@ -30,9 +30,10 @@ body {
   color: #333333;
 }
 
+/* Base input styles, including adjustment for password icon */
 .login-container input[type="text"],
-.login-container input[type="password"],
-.login-container input[type="email"] {
+.login-container input[type="email"],
+.login-container input[type="password"] {
   width: 100%;
   padding: 0.625rem 0.75rem;
   margin-bottom: 1rem;
@@ -41,6 +42,12 @@ body {
   font-size: 1rem;
   color: #333333;
 }
+
+/* Specific padding for password inputs to make room for the toggle button */
+.login-container input[type="password"] {
+  padding-right: 40px; /* Adjust this value if your icon or button is larger */
+}
+
 
 .login-container .options {
   display: flex;
@@ -64,7 +71,7 @@ body {
   text-decoration: underline;
 }
 
-.login-container button {
+.login-container button[type="submit"] { /* Target submit button specifically */
   width: 100%;
   padding: 0.75rem 0;
   background-color: #007bff;
@@ -76,7 +83,7 @@ body {
   transition: background-color 0.2s ease-in-out;
 }
 
-.login-container button:hover {
+.login-container button[type="submit"]:hover {
   background-color: #0056b3;
 }
 
@@ -102,10 +109,37 @@ body {
   gap: 8px;
 }
 
+/* Form Group and Password Container Styles */
 .form-group {
-  position: relative;
-  margin-bottom: 15px;
+  position: relative; /* Essential for positioning children absolutely */
+  margin-bottom: 15px; /* Keep your existing margin */
 }
+
+/* Specific styling for the password container */
+.form-group.password-container {
+  /* This ensures the relative positioning is applied to the correct container */
+  position: relative;
+}
+
+/* Styles for the show/hide password button */
+.toggle-password {
+  position: absolute;
+  right: 7px; /* Adjust as needed to position the icon */
+  top: 45%;
+  transform: translateY(-60%); /* Vertically centers the button */
+  background: none;
+  border: none;
+  color: #666; /* Color of the eye icon */
+  cursor: pointer;
+  font-size: 1.2rem; /* Size of the eye icon */
+  padding: 0 5px; /* Small padding for click area */
+  z-index: 2; /* Ensure it's above the input field */
+}
+
+.toggle-password:hover {
+  color: #000;
+}
+
 
 .valid-input {
   border: 2px solid #4CAF50 !important;
@@ -291,3 +325,4 @@ input:focus:invalid {
     width: 100%;
   }
 }
+

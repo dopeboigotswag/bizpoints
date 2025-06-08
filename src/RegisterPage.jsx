@@ -1,9 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './styles.css';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -64,6 +67,8 @@ const RegisterPage = () => {
       [name]: type === 'checkbox' ? checked : value
     });
 
+    // Use a setTimeout to allow the state update to batch,
+    // and then validate based on the potentially new value
     setTimeout(() => {
       switch (name) {
         case 'username':
@@ -73,7 +78,9 @@ const RegisterPage = () => {
           setFieldValidity(prev => ({...prev, password: value.length >= 8}));
           break;
         case 'terms':
-          termsRef.current.setCustomValidity(checked ? '' : 'You must accept the terms');
+          if (termsRef.current) { // Ensure ref is not null
+            termsRef.current.setCustomValidity(checked ? '' : 'You must accept the terms');
+          }
           setFieldValidity(prev => ({...prev, terms: checked}));
           break;
         default:
@@ -84,9 +91,31 @@ const RegisterPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const allValid = Object.values(fieldValidity).every(valid => valid);
 
-    if (allValid) {
+    // Trigger validation for all fields on submit
+    // This ensures error messages are shown if the form is invalid
+    const inputs = formRef.current.querySelectorAll('input, select, textarea');
+    let allInputsValid = true;
+    inputs.forEach(input => {
+      // Manually set custom validity for terms checkbox if not checked
+      if (input.name === 'terms' && !formData.terms) {
+        input.setCustomValidity('You must accept the terms');
+      } else {
+        input.setCustomValidity(''); // Clear any previous custom validity
+      }
+
+      if (!input.checkValidity()) {
+        input.reportValidity(); // Show native browser validation message
+        allInputsValid = false;
+      }
+    });
+
+    // Double-check fieldValidity state for programmatic checks
+    const allProgrammaticChecksValid = Object.values(fieldValidity).every(valid => valid);
+
+    if (allInputsValid && allProgrammaticChecksValid) {
+      // In a real application, you would send formData to a backend for registration.
+      console.log("Registration Data:", formData);
       navigate('/login', {
         state: {
           fromRegistration: true,
@@ -95,12 +124,7 @@ const RegisterPage = () => {
         }
       });
     } else {
-      const inputs = formRef.current.querySelectorAll('input');
-      inputs.forEach(input => {
-        if (!fieldValidity[input.name] || !input.checkValidity()) {
-          input.reportValidity();
-        }
-      });
+      console.log("Form is invalid. Please correct the errors.");
     }
   };
 
@@ -109,7 +133,7 @@ const RegisterPage = () => {
   return (
       <div className="login-container">
         <h2>Create Account</h2>
-        <form ref={formRef} onSubmit={handleSubmit} noValidate>
+        <form ref={formRef} onSubmit={handleSubmit} noValidate> {/* noValidate to control validation via JS */}
           <div className="form-group">
             <input
                 type="text"
@@ -136,9 +160,9 @@ const RegisterPage = () => {
             />
           </div>
 
-          <div className="form-group">
+          <div className="form-group password-container">
             <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="Password (min 8 characters)"
                 value={formData.password}
@@ -147,12 +171,20 @@ const RegisterPage = () => {
                 minLength={8}
                 className={fieldValidity.password ? 'valid-input' : ''}
             />
+            <button
+                type="button"
+                className="toggle-password"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
           </div>
 
-          <div className="form-group">
+          <div className="form-group password-container">
             <input
                 ref={confirmPasswordRef}
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 placeholder="Confirm Password"
                 value={formData.confirmPassword}
@@ -160,6 +192,14 @@ const RegisterPage = () => {
                 required
                 className={fieldValidity.confirmPassword ? 'valid-input' : ''}
             />
+            <button
+                type="button"
+                className="toggle-password"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
           </div>
 
           <div className={`form-group checkbox-group ${fieldValidity.terms ? 'valid-terms' : ''}`}>
