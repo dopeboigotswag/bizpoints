@@ -6,23 +6,23 @@
 }
 
 body {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  min-height: 100vh;
   background: linear-gradient(135deg, #74ebd5, #acb6e5);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Container that holds the entire login form */
+/* Login/Register Container Styles */
 .login-container {
   background-color: #ffffff;
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 320px;
+  margin: auto;
 }
 
-/* Title styling */
 .login-container h2 {
   text-align: center;
   margin-bottom: 1.5rem;
@@ -30,7 +30,6 @@ body {
   color: #333333;
 }
 
-/* Common input styling */
 .login-container input[type="text"],
 .login-container input[type="password"],
 .login-container input[type="email"] {
@@ -43,7 +42,6 @@ body {
   color: #333333;
 }
 
-/* The “Remember Me” checkbox + “Forgot Password?” link */
 .login-container .options {
   display: flex;
   justify-content: space-between;
@@ -66,7 +64,6 @@ body {
   text-decoration: underline;
 }
 
-/* Login button */
 .login-container button {
   width: 100%;
   padding: 0.75rem 0;
@@ -83,7 +80,6 @@ body {
   background-color: #0056b3;
 }
 
-/* “Don’t have an account? Register here” */
 .login-container .register {
   margin-top: 1.25rem;
   text-align: center;
@@ -104,4 +100,194 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.valid-input {
+  border: 2px solid #4CAF50 !important;
+  background-color: #f8fff8;
+}
+
+.checkbox-group.valid-terms label {
+  color: #4CAF50;
+}
+
+button.valid-submit {
+  background-color: #4CAF50;
+}
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+input:invalid {
+  border-color: #ff4444;
+}
+
+input:focus:invalid {
+  box-shadow: 0 0 5px #ff4444;
+}
+
+.error-message {
+  color: #ff4444;
+  font-size: 0.8rem;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+.success-banner {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.registered-info {
+  margin-top: 10px;
+  font-size: 0.9em;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+.registered-info div {
+  margin: 4px 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Terms Page Styles */
+.terms-page-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.terms-container {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 800px;
+  padding: 2.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin: 2rem auto;
+  flex: 1;
+}
+
+.terms-container h1 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.terms-content {
+  line-height: 1.7;
+}
+
+.terms-content section {
+  margin-bottom: 2rem;
+}
+
+.terms-content h2 {
+  color: #3498db;
+  font-size: 1.4rem;
+  margin: 2rem 0 1rem;
+}
+
+.terms-content p {
+  margin-bottom: 1rem;
+  color: #34495e;
+  font-size: 1rem;
+}
+
+.effective-date {
+  font-style: italic;
+  text-align: right;
+  margin-top: 3rem;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.terms-actions {
+  text-align: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+}
+
+.back-button {
+  display: inline-block;
+  padding: 0.9rem 1.8rem;
+  background-color: #3498db;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.back-button:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 900px) {
+  .terms-container {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .terms-container {
+    padding: 1.8rem;
+    margin: 1.5rem auto;
+  }
+
+  .terms-container h1 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 15px;
+  }
+
+  .terms-container {
+    padding: 1.5rem;
+  }
+
+  .terms-container h1 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+
+  .terms-container {
+    padding: 1.2rem;
+    border-radius: 0;
+  }
+
+  .terms-container h1 {
+    font-size: 1.4rem;
+  }
+
+  .back-button {
+    width: 100%;
+  }
 }
