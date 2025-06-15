@@ -2,7 +2,11 @@
   "name": "bizpoints",
   "version": "0.1.0",
   "private": true,
+<<<<<<< HEAD
   "homepage": "https://dopeboigotswag.github.io/bizpoints",
+=======
+  "proxy": "http://localhost:8080",
+>>>>>>> d817bef (Initial full-stack auth flow: React frontend, Spring Boot backend, Mongo Atlas)
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 * {
   box-sizing: border-box;
   margin: 0;
@@ -326,3 +327,333 @@ input:focus:invalid {
   }
 }
 
+=======
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #74ebd5, #acb6e5);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Login/Register Container Styles */
+.login-container {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 320px;
+  margin: auto;
+}
+
+.login-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: #333333;
+}
+
+/* Base input styles, including adjustment for password icon */
+.login-container input[type="text"],
+.login-container input[type="email"],
+.login-container input[type="password"] {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  color: #333333;
+}
+
+/* Specific padding for password inputs to make room for the toggle button */
+.login-container input[type="password"] {
+  padding-right: 40px; /* Adjust this value if your icon or button is larger */
+}
+
+
+.login-container .options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.login-container .options label {
+  font-size: 0.95rem;
+  color: #333333;
+}
+
+.login-container .options a {
+  font-size: 0.95rem;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.login-container .options a:hover {
+  text-decoration: underline;
+}
+
+.login-container button[type="submit"] { /* Target submit button specifically */
+  width: 100%;
+  padding: 0.75rem 0;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.login-container button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+.login-container .register {
+  margin-top: 1.25rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #333333;
+}
+
+.login-container .register a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.login-container .register a:hover {
+  text-decoration: underline;
+}
+
+.login-container .options label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Form Group and Password Container Styles */
+.form-group {
+  position: relative; /* Essential for positioning children absolutely */
+  margin-bottom: 15px; /* Keep your existing margin */
+}
+
+/* Specific styling for the password container */
+.form-group.password-container {
+  /* This ensures the relative positioning is applied to the correct container */
+  position: relative;
+}
+
+/* Styles for the show/hide password button */
+.toggle-password {
+  position: absolute;
+  right: 7px; /* Adjust as needed to position the icon */
+  top: 45%;
+  transform: translateY(-60%); /* Vertically centers the button */
+  background: none;
+  border: none;
+  color: #666; /* Color of the eye icon */
+  cursor: pointer;
+  font-size: 1.2rem; /* Size of the eye icon */
+  padding: 0 5px; /* Small padding for click area */
+  z-index: 2; /* Ensure it's above the input field */
+}
+
+.toggle-password:hover {
+  color: #000;
+}
+
+
+.valid-input {
+  border: 2px solid #4CAF50 !important;
+  background-color: #f8fff8;
+}
+
+.checkbox-group.valid-terms label {
+  color: #4CAF50;
+}
+
+button.valid-submit {
+  background-color: #4CAF50;
+}
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+input:invalid {
+  border-color: #ff4444;
+}
+
+input:focus:invalid {
+  box-shadow: 0 0 5px #ff4444;
+}
+
+.error-message {
+  color: #ff4444;
+  font-size: 0.8rem;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+.success-banner {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.registered-info {
+  margin-top: 10px;
+  font-size: 0.9em;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+.registered-info div {
+  margin: 4px 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Terms Page Styles */
+.terms-page-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.terms-container {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 800px;
+  padding: 2.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin: 2rem auto;
+  flex: 1;
+}
+
+.terms-container h1 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.terms-content {
+  line-height: 1.7;
+}
+
+.terms-content section {
+  margin-bottom: 2rem;
+}
+
+.terms-content h2 {
+  color: #3498db;
+  font-size: 1.4rem;
+  margin: 2rem 0 1rem;
+}
+
+.terms-content p {
+  margin-bottom: 1rem;
+  color: #34495e;
+  font-size: 1rem;
+}
+
+.effective-date {
+  font-style: italic;
+  text-align: right;
+  margin-top: 3rem;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.terms-actions {
+  text-align: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+}
+
+.back-button {
+  display: inline-block;
+  padding: 0.9rem 1.8rem;
+  background-color: #3498db;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.back-button:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 900px) {
+  .terms-container {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .terms-container {
+    padding: 1.8rem;
+    margin: 1.5rem auto;
+  }
+
+  .terms-container h1 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 15px;
+  }
+
+  .terms-container {
+    padding: 1.5rem;
+  }
+
+  .terms-container h1 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+
+  .terms-container {
+    padding: 1.2rem;
+    border-radius: 0;
+  }
+
+  .terms-container h1 {
+    font-size: 1.4rem;
+  }
+
+  .back-button {
+    width: 100%;
+  }
+}
+
+>>>>>>> d817bef (Initial full-stack auth flow: React frontend, Spring Boot backend, Mongo Atlas)
