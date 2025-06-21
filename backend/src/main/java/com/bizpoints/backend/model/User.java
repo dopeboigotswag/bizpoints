@@ -6,22 +6,27 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("users")
 public class User {
   @Id private String id;
+  private String username;
   private String email;
   private String password;
 
-  // 1) No-args constructor for Jackson
+  // No-args constructor
   public User() {}
 
-  // 2) All-args constructor (optional)
-  public User(String id, String email, String password) {
+  // All-args constructor
+  public User(String id, String username, String email, String password) {
     this.id = id;
+    this.username = username;
     this.email = email;
     this.password = password;
   }
 
-  // 3) Getters & setters
+  // Getters & setters
   public String getId() { return id; }
   public void setId(String id) { this.id = id; }
+
+  public String getUsername() { return username; }
+  public void setUsername(String username) { this.username = username; }
 
   public String getEmail() { return email; }
   public void setEmail(String email) { this.email = email; }

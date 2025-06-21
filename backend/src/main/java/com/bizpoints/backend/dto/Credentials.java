@@ -1,17 +1,14 @@
 package com.bizpoints.backend.dto;
 
-/**
- * Simple DTO for login credentials binding.
- */
 public class Credentials {
-
+  private String username;
   private String email;
   private String password;
 
-  // Jackson requires a no-args constructor
-  public Credentials() {}
+  public String getUsername() { return username; }
 
-  // Getters & setters for JSON binding
+  public void setUsername(String username) { this.username = username; }
+
   public String getEmail() { return email; }
 
   public void setEmail(String email) { this.email = email; }
