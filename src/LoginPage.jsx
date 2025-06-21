@@ -1,21 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './styles.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { login } from './services/authService';
 
-const LoginPage = () => {
+export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
   const [showSuccessBanner, setShowSuccessBanner] = useState(false);
-  const [showPassword, setShowPassword]       = useState(false);
-  const [registeredData, setRegisteredData]   = useState({ username: '', email: '' });
-  const [formData, setFormData]               = useState({ email: '', password: '' });
-  const [fieldValidity, setFieldValidity]     = useState({ email: false, password: false });
-  const [error, setError]                     = useState('');
-  const emailRef                              = useRef(null);
-  const formRef                               = useRef(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [registeredData, setRegisteredData] = useState({ username: '', email: '' });
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [validity, setValidity] = useState({ email: false, password: false });
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
+
+  const emailRef = useRef(null);
+  const formRef = useRef(null);
 
   // Show banner if redirected from registration
   useEffect(() => {
@@ -23,27 +25,23 @@ const LoginPage = () => {
       setShowSuccessBanner(true);
       setRegisteredData({
         username: location.state.registeredUsername,
-        email:    location.state.registeredEmail
+        email: location.state.registeredEmail
       });
       setFormData(f => ({ ...f, email: location.state.registeredEmail }));
-      // clear the state so banner only shows once
       window.history.replaceState({}, document.title);
     }
   }, [location]);
 
-  // Email validation
+  // Validate email format
   useEffect(() => {
-    const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
-    setFieldValidity(f => ({ ...f, email: valid }));
-    if (emailRef.current) {
-      emailRef.current.setCustomValidity(valid ? '' : 'Enter a valid email');
-    }
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+    emailRef.current.setCustomValidity(ok ? '' : 'Enter a valid email');
+    setValidity(v => ({ ...v, email: ok }));
   }, [formData.email]);
 
-  // Password length validation
+  // Validate password length
   useEffect(() => {
-    const valid = formData.password.length >= 8;
-    setFieldValidity(f => ({ ...f, password: valid }));
+    setValidity(v => ({ ...v, password: formData.password.length >= 8 }));
   }, [formData.password]);
 
   const handleChange = e => {
@@ -54,20 +52,21 @@ const LoginPage = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     setError('');
+    setSubmitted(true);
 
-    // Native HTML5 check
+    // Native validation for tooltips
     let nativeOk = true;
-    formRef.current.querySelectorAll('input').forEach(inp => {
-      inp.setCustomValidity('');
-      if (!inp.checkValidity()) {
-        inp.reportValidity();
+    formRef.current.querySelectorAll('input').forEach(i => {
+      i.setCustomValidity('');
+      if (!i.checkValidity()) {
+        i.reportValidity();
         nativeOk = false;
       }
     });
     if (!nativeOk) return;
 
-    // Programmatic check
-    if (!Object.values(fieldValidity).every(Boolean)) return;
+    // Our custom check
+    if (!validity.email || !validity.password) return;
 
     try {
       await login({ email: formData.email, password: formData.password });
@@ -77,7 +76,13 @@ const LoginPage = () => {
     }
   };
 
-  const isFormValid = Object.values(fieldValidity).every(Boolean);
+  // helper for input classes
+  const cls = valid =>
+    valid
+      ? 'valid-input'
+      : submitted
+        ? 'invalid-input'
+        : '';
 
   return (
     <div className="login-container">
@@ -93,6 +98,7 @@ const LoginPage = () => {
 
       <h2>Login</h2>
       {error && <p className="error-message">{error}</p>}
+
       <form ref={formRef} onSubmit={handleSubmit} noValidate>
         <input
           ref={emailRef}
@@ -102,7 +108,7 @@ const LoginPage = () => {
           value={formData.email}
           onChange={handleChange}
           required
-          className={fieldValidity.email ? 'valid-input' : ''}
+          className={cls(validity.email)}
         />
 
         <div className="form-group password-container">
@@ -114,7 +120,7 @@ const LoginPage = () => {
             onChange={handleChange}
             required
             minLength={8}
-            className={fieldValidity.password ? 'valid-input' : ''}
+            className={cls(validity.password)}
           />
           <button
             type="button"
@@ -125,14 +131,10 @@ const LoginPage = () => {
             {showPassword ? <FaEyeSlash /> : <FaEye />}
           </button>
         </div>
-        {formData.password && !fieldValidity.password && (
-          <p className="error-message">Password must be at least 8 characters</p>
-        )}
 
         <button
           type="submit"
-          className={isFormValid ? 'valid-submit' : ''}
-          disabled={!isFormValid}
+          className={validity.email && validity.password ? 'valid-submit' : ''}
         >
           Login
         </button>
@@ -143,6 +145,4 @@ const LoginPage = () => {
       </form>
     </div>
   );
-};
-
-export default LoginPage;
+}
