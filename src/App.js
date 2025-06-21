@@ -1,40 +1,26 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LoginPage from './LoginPage';
-import RegisterPage from './RegisterPage';
-import TermsPage from './TermsPage';
-<<<<<<< HEAD
+import LoginPage     from './LoginPage';
+import RegisterPage  from './RegisterPage';
+import TermsPage     from './TermsPage';
+import Dashboard     from './Dashboard';
+import PrivateRoute  from './PrivateRoute';
 
 function App() {
-    return (
-        <Router basename="/bizpoints">  {/* ← Add this line with your repo name */}
-            <div className="App">
-                <Routes>
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
-                    <Route path="/" element={<LoginPage />} />
-                    <Route path="/terms" element={<TermsPage />} />
-                </Routes>
-            </div>
-        </Router>
-    );
-=======
-import Dashboard from './Dashboard';
-import PrivateRoute from './PrivateRoute';
+  const basename = process.env.PUBLIC_URL || '/';
 
-function App() {
   return (
-    <Router>  {/* Removed basename */}
+    <Router basename={basename}>
       <div className="App">
         <Routes>
-          {/* Public routes */}
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/login"    element={<LoginPage />} />
-          <Route path="/terms"     element={<TermsPage />} />
+          {/* public */}
+          <Route path="register" element={<RegisterPage />} />
+          <Route path="login"    element={<LoginPage    />} />
+          <Route path="terms"    element={<TermsPage     />} />
 
-          {/* Protected route */}
+          {/* protected */}
           <Route
-            path="/dashboard"
+            path="dashboard"
             element={
               <PrivateRoute>
                 <Dashboard />
@@ -42,13 +28,12 @@ function App() {
             }
           />
 
-          {/* Default to login */}
+          {/* default */}
           <Route path="/" element={<LoginPage />} />
         </Routes>
       </div>
     </Router>
   );
->>>>>>> d817bef (Initial full-stack auth flow: React frontend, Spring Boot backend, Mongo Atlas)
 }
 
 export default App;

@@ -1,11 +1,12 @@
+import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
+import { getToken }              from './services/authService';
 
 export default function PrivateRoute({ children }) {
-  const token = localStorage.getItem('bp_token');
+  const token = getToken();
   const location = useLocation();
 
   if (!token) {
-    // Redirect to /login, preserving the current location
     return (
       <Navigate
         to="/login"
@@ -17,4 +18,3 @@ export default function PrivateRoute({ children }) {
 
   return children;
 }
-// This component checks if the user is authenticated by looking for a token in localStorage.

@@ -1,30 +1,36 @@
-// All calls to `/api` will be forwarded by CRA to http://localhost:8080
 const API_BASE = '/api';
 
+function getTokenKey() {
+  return 'bp_token';
+}
+
+function getUsernameKey() {
+  return 'bp_username';
+}
+
 /**
- * Register a new user and auto‐store the returned JWT.
+ * Register a new user and auto-store the returned JWT and username.
  */
-export async function register({ email, password }) {
+export async function register({ username, email, password }) {
   const res = await fetch(`${API_BASE}/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ username, email, password }),
   });
 
-  // On failure, server returns JSON { error: "…"}
   if (!res.ok) {
     const err = await res.json();
     throw new Error(err.error || 'Registration failed');
   }
 
-  // On success, server returns JSON { token: "…" }
-  const { token } = await res.json();
-  localStorage.setItem('bp_token', token);
+  const { token, username: returnedUsername } = await res.json();
+  localStorage.setItem(getTokenKey(), token);
+  localStorage.setItem(getUsernameKey(), returnedUsername);
   return token;
 }
 
 /**
- * Log in an existing user and store the JWT.
+ * Log in an existing user and store the JWT and username.
  */
 export async function login({ email, password }) {
   const res = await fetch(`${API_BASE}/auth/login`, {
@@ -38,14 +44,30 @@ export async function login({ email, password }) {
     throw new Error(err.error || 'Login failed');
   }
 
-  const { token } = await res.json();
-  localStorage.setItem('bp_token', token);
+  const { token, username } = await res.json();
+  localStorage.setItem(getTokenKey(), token);
+  localStorage.setItem(getUsernameKey(), username);
   return token;
 }
 
 /**
- * Clear stored JWT on logout.
+ * Clear stored JWT and username on logout.
  */
 export function logout() {
-  localStorage.removeItem('bp_token');
+  localStorage.removeItem(getTokenKey());
+  localStorage.removeItem(getUsernameKey());
+}
+
+/**
+ * Helper to read the JWT for protected calls.
+ */
+export function getToken() {
+  return localStorage.getItem(getTokenKey());
+}
+
+/**
+ * Helper to read the stored username.
+ */
+export function getUsername() {
+  return localStorage.getItem(getUsernameKey());
 }
