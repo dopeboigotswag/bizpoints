@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate }                from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './styles.css';
-import { FaEye, FaEyeSlash }                 from 'react-icons/fa';
-import { register }                          from './services/authService';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { register } from './services/authService';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
-  const [showPassword, setShowPassword]             = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError]                           = useState('');
+  const [error, setError] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
   const [formData, setFormData] = useState({
     username: '',
@@ -18,7 +19,7 @@ export default function RegisterPage() {
     terms: false,
   });
 
-  const [fieldValidity, setFieldValidity] = useState({
+  const [validity, setValidity] = useState({
     username: false,
     email: false,
     password: false,
@@ -26,58 +27,49 @@ export default function RegisterPage() {
     terms: false,
   });
 
-  const formRef            = useRef(null);
-  const emailRef           = useRef(null);
-  const confirmPasswordRef = useRef(null);
-  const termsRef           = useRef(null);
+  const formRef = useRef(null);
+  const emailRef = useRef(null);
+  const confirmRef = useRef(null);
+  const termsRef = useRef(null);
 
-  // Username ≥ 5 chars
+  // Validate username ≥ 5 chars
   useEffect(() => {
-    setFieldValidity(v => ({
+    setValidity(v => ({
       ...v,
       username: formData.username.trim().length >= 5,
     }));
   }, [formData.username]);
 
-  // Email format
+  // Validate email format
   useEffect(() => {
-    if (!formData.email) return;
-    const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
-    emailRef.current.setCustomValidity(valid ? '' : 'Enter a valid email');
-    setFieldValidity(v => ({ ...v, email: valid }));
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+    emailRef.current.setCustomValidity(ok ? '' : 'Enter a valid email');
+    setValidity(v => ({ ...v, email: ok }));
   }, [formData.email]);
 
-  // Password ≥ 8 chars
+  // Validate password ≥ 8 chars
   useEffect(() => {
-    setFieldValidity(v => ({
+    setValidity(v => ({
       ...v,
       password: formData.password.length >= 8,
     }));
   }, [formData.password]);
 
-  // Confirm matches password
+  // Validate confirmPassword matches
   useEffect(() => {
-    if (!formData.confirmPassword) return;
-    const input = confirmPasswordRef.current;
-    if (formData.password !== formData.confirmPassword) {
-      input.setCustomValidity("Passwords don't match");
-      setFieldValidity(v => ({ ...v, confirmPassword: false }));
-    } else {
-      input.setCustomValidity('');
-      setFieldValidity(v => ({ ...v, confirmPassword: true }));
-    }
+    const match = formData.password === formData.confirmPassword && formData.confirmPassword !== '';
+    confirmRef.current.setCustomValidity(match ? '' : "Passwords don't match");
+    setValidity(v => ({ ...v, confirmPassword: match }));
   }, [formData.password, formData.confirmPassword]);
 
-  // Terms checkbox
+  // Validate terms checkbox
   useEffect(() => {
-    termsRef.current.setCustomValidity(
-      formData.terms ? '' : 'You must accept the terms'
-    );
-    setFieldValidity(v => ({ ...v, terms: formData.terms }));
+    termsRef.current.setCustomValidity(formData.terms ? '' : 'You must accept the terms');
+    setValidity(v => ({ ...v, terms: formData.terms }));
   }, [formData.terms]);
 
   const handleChange = e => {
-    const { name, value, type, checked } = e.target;
+    const { name, type, checked, value } = e.target;
     setFormData(f => ({
       ...f,
       [name]: type === 'checkbox' ? checked : value,
@@ -87,33 +79,36 @@ export default function RegisterPage() {
   const handleSubmit = async e => {
     e.preventDefault();
     setError('');
+    setSubmitted(true);
 
-    // Native HTML5 validation
+    // Native validation for browser tooltips
     let nativeOk = true;
-    formRef.current.querySelectorAll('input').forEach(inp => {
-      inp.setCustomValidity('');
-      if (!inp.checkValidity()) {
-        inp.reportValidity();
+    formRef.current.querySelectorAll('input').forEach(i => {
+      i.setCustomValidity('');
+      if (!i.checkValidity()) {
+        i.reportValidity();
         nativeOk = false;
       }
     });
     if (!nativeOk) return;
 
-    // All fields valid?
-    if (!Object.values(fieldValidity).every(Boolean)) return;
+    // Our custom validity map
+    if (!Object.values(validity).every(Boolean)) {
+      return;
+    }
 
     try {
       await register({
         username: formData.username,
-        email:    formData.email,
+        email: formData.email,
         password: formData.password,
       });
       navigate('/login', {
         replace: true,
         state: {
-          fromRegistration:   true,
+          fromRegistration: true,
           registeredUsername: formData.username,
-          registeredEmail:    formData.email,
+          registeredEmail: formData.email,
         },
       });
     } catch (err) {
@@ -121,7 +116,13 @@ export default function RegisterPage() {
     }
   };
 
-  const isFormValid = Object.values(fieldValidity).every(Boolean);
+  // Helper to choose input class after submit
+  const cls = valid =>
+    valid
+      ? 'valid-input'
+      : submitted
+        ? 'invalid-input'
+        : '';
 
   return (
     <div className="login-container">
@@ -139,8 +140,11 @@ export default function RegisterPage() {
             onChange={handleChange}
             required
             minLength={5}
-            className={fieldValidity.username ? 'valid-input' : ''}
+            className={cls(validity.username)}
           />
+          {submitted && !validity.username && (
+            <p className="error-message">Username must be at least 5 characters</p>
+          )}
         </div>
 
         {/* Email */}
@@ -153,8 +157,11 @@ export default function RegisterPage() {
             value={formData.email}
             onChange={handleChange}
             required
-            className={fieldValidity.email ? 'valid-input' : ''}
+            className={cls(validity.email)}
           />
+          {submitted && !validity.email && (
+            <p className="error-message">Enter a valid email address</p>
+          )}
         </div>
 
         {/* Password */}
@@ -167,7 +174,7 @@ export default function RegisterPage() {
             onChange={handleChange}
             required
             minLength={8}
-            className={fieldValidity.password ? 'valid-input' : ''}
+            className={cls(validity.password)}
           />
           <button
             type="button"
@@ -178,25 +185,21 @@ export default function RegisterPage() {
             {showPassword ? <FaEyeSlash /> : <FaEye />}
           </button>
         </div>
-        {formData.password && !fieldValidity.password && (
-          <p className="error-message">
-            Password must be at least 8 characters
-          </p>
+        {submitted && !validity.password && (
+          <p className="error-message">Password must be at least 8 characters</p>
         )}
 
         {/* Confirm Password */}
         <div className="form-group password-container">
           <input
-            ref={confirmPasswordRef}
+            ref={confirmRef}
             type={showConfirmPassword ? 'text' : 'password'}
             name="confirmPassword"
             placeholder="Confirm Password"
             value={formData.confirmPassword}
             onChange={handleChange}
             required
-            className={
-              fieldValidity.confirmPassword ? 'valid-input' : ''
-            }
+            className={cls(validity.confirmPassword)}
           />
           <button
             type="button"
@@ -207,17 +210,12 @@ export default function RegisterPage() {
             {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
           </button>
         </div>
-        {formData.confirmPassword && !fieldValidity.confirmPassword && (
+        {submitted && !validity.confirmPassword && (
           <p className="error-message">Passwords don’t match</p>
         )}
 
         {/* Terms */}
-        <div
-          className={
-            'form-group checkbox-group ' +
-            (fieldValidity.terms ? 'valid-terms' : '')
-          }
-        >
+        <div className={`form-group checkbox-group ${validity.terms ? 'valid-terms' : ''}`}>
           <label>
             <input
               ref={termsRef}
@@ -230,19 +228,16 @@ export default function RegisterPage() {
             I agree to the <Link to="/terms">Terms & Conditions</Link>
           </label>
         </div>
+        {submitted && !validity.terms && (
+          <p className="error-message">You must accept the terms</p>
+        )}
 
         <button
           type="submit"
-          className={isFormValid ? 'valid-submit' : ''}
-          disabled={!isFormValid}
+          className={Object.values(validity).every(v => v) ? 'valid-submit' : ''}
         >
           Register
         </button>
-
-        <p className="register">
-          Already have an account?{' '}
-          <Link to="/login">Login here</Link>
-        </p>
       </form>
     </div>
   );
